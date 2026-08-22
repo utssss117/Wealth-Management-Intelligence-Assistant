@@ -63,3 +63,10 @@ logs/
 # OS
 .DS_Store
 Desktop.ini
+
+# Scratch / helper scripts
+inspect_cells.py
+
+# Data files (large / generated)
+data/raw/*.txt
+data/clean/
