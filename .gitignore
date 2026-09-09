@@ -69,3 +69,4 @@ inspect_cells.py
 
 # Data files (large / generated)
 data/raw/*.txt
+data/*.db
