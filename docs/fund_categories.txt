@@ -1,0 +1,21 @@
+TYPES OF MUTUAL FUNDS: EQUITY, DEBT, AND HYBRID
+
+Not all mutual funds are the same. They differ based on what they invest in, which in turn determines how risky they are and what kind of returns they might offer over time. The three broad categories are equity, debt, and hybrid funds.
+
+EQUITY FUNDS
+
+Equity funds invest primarily in stocks — shares of listed companies. When companies do well, their stock prices rise, and so does the fund's value. When markets fall, equity funds can drop sharply in the short term.
+
+Because of this, equity funds are considered higher risk. But over long time horizons — typically many years — equity funds have historically offered the potential for higher returns compared to other asset classes. Within equity funds, there are further sub-categories based on company size (large-cap, mid-cap, small-cap) and investment style (sectoral, thematic, flexi-cap, etc.).
+
+DEBT FUNDS
+
+Debt funds invest in fixed-income instruments — things like government bonds, corporate bonds, treasury bills, and money market instruments. These don't fluctuate as wildly as stocks, making debt funds generally lower risk.
+
+Returns from debt funds tend to be more stable and predictable, though not guaranteed. They can still be affected by interest rate changes and credit risk (the risk that a bond issuer defaults). Debt funds are often used for shorter investment horizons or as a more stable part of a portfolio.
+
+HYBRID FUNDS
+
+Hybrid funds invest in a mix of both equity and debt. The idea is to balance growth potential with some stability. The proportion varies — some hybrid funds are more equity-heavy (aggressive hybrid), while others lean towards debt (conservative hybrid). A balanced or dynamic allocation fund adjusts this mix based on market conditions.
+
+Hybrid funds generally sit in the middle of the risk spectrum — more risk than pure debt, less risk than pure equity.

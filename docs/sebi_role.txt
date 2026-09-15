@@ -1,0 +1,23 @@
+WHAT IS SEBI AND WHAT DOES IT DO IN MUTUAL FUNDS?
+
+SEBI stands for the Securities and Exchange Board of India. It is the primary regulatory body for capital markets in India — which includes stock exchanges, brokers, listed companies, and mutual funds. SEBI was established by an Act of Parliament in 1992 and operates as an independent statutory body.
+
+Think of SEBI as the rule-maker and watchdog for the entire investment ecosystem in India. Its core purpose is to protect investors and ensure that markets function fairly and transparently.
+
+SEBI'S ROLE IN MUTUAL FUNDS
+
+In the mutual fund space specifically, SEBI is responsible for:
+
+1. Licensing and oversight — SEBI approves and regulates Asset Management Companies (AMCs), the firms that actually run mutual funds. An AMC cannot legally operate without SEBI's registration.
+
+2. Setting rules and regulations — SEBI defines the rules that AMCs must follow: how funds must be categorized, what they can and cannot invest in, how expenses must be disclosed, and how investors must be treated.
+
+3. Capping expense ratios — SEBI sets upper limits on how much an AMC can charge investors as an expense ratio. This protects investors from being overcharged.
+
+4. Mandating disclosures — SEBI requires AMCs to regularly publish detailed information about their funds — portfolio holdings, NAVs, performance, and risks — so investors can make informed decisions.
+
+5. Handling investor grievances — SEBI has mechanisms for investors to raise complaints against fund houses if they believe they've been treated unfairly.
+
+WHY DOES SEBI EXIST?
+
+Without a regulator, there's a risk that market participants could act in their own interest at the expense of ordinary investors — through fraud, hidden charges, or misleading information. SEBI exists to level that playing field and give investors a fair, transparent environment to participate in the markets.

@@ -1,0 +1,22 @@
+WHAT IS NAV (NET ASSET VALUE)?
+
+When you invest in a mutual fund, you're essentially buying units of that fund — similar to buying shares of a company. NAV, or Net Asset Value, is the price of one such unit on any given day.
+
+HOW IS IT CALCULATED?
+
+A mutual fund pools money from many investors and uses it to buy a basket of securities — stocks, bonds, or a mix. The total market value of everything the fund holds, minus any liabilities (like fees or expenses owed), gives you the fund's net assets. Divide that number by the total units held by all investors, and you get the NAV.
+
+Formula (in plain terms):
+NAV = (Total value of all investments − Liabilities) ÷ Total number of units
+
+For example, if a fund's investments are worth ₹100 crore, it has ₹1 crore in liabilities, and 10 crore units outstanding, the NAV is ₹9.90 per unit.
+
+WHY DOES NAV CHANGE EVERY DAY?
+
+The securities a mutual fund holds — stocks, bonds, etc. — are traded in markets that move up and down every day. As their prices change, the total value of the fund's portfolio changes too. So the NAV is recalculated at the end of every market day to reflect the current value of all holdings.
+
+A rising NAV means the fund's portfolio has grown in value. A falling NAV means the portfolio has lost value that day.
+
+ONE IMPORTANT THING TO REMEMBER
+
+A high NAV doesn't mean a fund is expensive, and a low NAV doesn't mean it's cheap. What matters is how much the NAV grows over time relative to what you invested — that's your actual return. NAV alone doesn't tell you whether a fund is a good or bad choice.

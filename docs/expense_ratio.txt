@@ -1,0 +1,21 @@
+WHAT IS AN EXPENSE RATIO?
+
+Running a mutual fund isn't free. There's a fund manager making investment decisions, a team doing research, operational costs, marketing, and more. All of these costs are bundled into a single annual fee called the expense ratio.
+
+The expense ratio is expressed as a percentage of your investment. If a fund has an expense ratio of 1.5%, it means the fund deducts 1.5% of your invested amount every year to cover its operating costs.
+
+HOW DOES IT ACTUALLY AFFECT YOU?
+
+You don't write a cheque for this fee — it's deducted from the fund's assets automatically before the NAV is calculated each day. So the NAV you see already reflects this deduction. But over long periods, even small differences in expense ratios can significantly impact your final returns because of compounding.
+
+For instance, a fund returning 12% annually with a 2% expense ratio effectively gives you around 10%. Over 20 years, that 2% gap can mean a meaningful difference in your final corpus.
+
+TYPICAL RANGES
+
+Equity mutual funds (which invest in stocks) tend to have higher expense ratios because they require more active research and management. For actively managed equity funds, expense ratios typically range from around 0.5% to 2.25%, depending on the fund size and category.
+
+Debt mutual funds (which invest in bonds and fixed-income instruments) are generally cheaper to manage, so their expense ratios are usually lower — often in the range of 0.2% to 1.5%.
+
+Index funds and ETFs, which just track a market index without active stock-picking, tend to have the lowest expense ratios of all, sometimes as low as 0.05% to 0.2%.
+
+SEBI caps the maximum expense ratio a fund can charge, and these limits are tiered based on the total assets under management (AUM) of the fund.

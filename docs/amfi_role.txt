@@ -1,0 +1,19 @@
+WHAT IS AMFI AND HOW IS IT DIFFERENT FROM SEBI?
+
+AMFI stands for the Association of Mutual Funds in India. It is an industry body — not a government regulator. AMFI was set up in 1995 by the mutual fund industry itself, and its members are the various Asset Management Companies (AMCs) operating in India.
+
+The easiest way to understand the difference: SEBI is the regulator that creates rules and enforces them with legal authority. AMFI is more like a trade association that brings the industry together, promotes good practices, and handles several operational and awareness-related functions on behalf of its members.
+
+WHAT DOES AMFI ACTUALLY DO?
+
+1. Publishing NAVs — One of AMFI's most practical roles is maintaining the official NAV database for all mutual funds in India. Every business day, all fund houses report their NAVs to AMFI, which then publishes them on its website. This is the authoritative source for daily mutual fund NAVs in India.
+
+2. Registering distributors — AMFI maintains a registry of all authorised mutual fund distributors and agents across the country. Anyone who wants to sell mutual funds must be registered with AMFI and hold an ARN (AMFI Registration Number). This helps ensure that only qualified, registered individuals or entities can distribute mutual fund products.
+
+3. Investor education and awareness — AMFI runs public awareness campaigns about mutual fund investing under initiatives like "Mutual Funds Sahi Hai." The goal is to help ordinary people understand what mutual funds are and how they work.
+
+4. Setting industry standards — While SEBI sets the hard regulatory rules, AMFI develops codes of conduct and best practices for its members to follow in their day-to-day operations.
+
+5. A bridge between industry and regulator — AMFI often acts as a communication channel between AMCs and SEBI, conveying industry feedback when new regulations are being considered.
+
+In short, SEBI holds the regulatory authority, while AMFI handles the industry-level coordination, operational infrastructure like NAV publishing, and public outreach.
