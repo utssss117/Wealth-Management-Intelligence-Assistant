@@ -85,28 +85,36 @@ def compare_funds(
         return {"error": f"db error: {e}"}
 
 
-# quick smoke test — run: python db/queries.py
-if __name__ == "__main__":
-    import os
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    DB = os.path.join(script_dir, "..", "data", "nav.db")
+def find_scheme_by_name(
+    name_query: str,
+    db_path: str = "data/nav.db",
+) -> list | dict:
+    """Case-insensitive partial match on scheme_name.
 
-    TEST_CODES = ["100033", "100034", "100037"]
+    Returns list of (scheme_code, scheme_name, fund_house_name) tuples,
+    or {"error": "..."} if nothing matched.
+    """
+    sql = """
+        SELECT s.scheme_code, s.scheme_name, fh.fund_house_name
+        FROM   schemes     s
+        JOIN   fund_houses fh ON s.fund_house_id = fh.fund_house_id
+        WHERE  LOWER(s.scheme_name) LIKE LOWER(?)
+        ORDER  BY s.scheme_name
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        try:
+            rows = conn.execute(sql, (f"%{name_query}%",)).fetchall()
+        finally:
+            conn.close()
 
-    print("--- get_nav_trend ---")
-    result = get_nav_trend(TEST_CODES[0], "2026-06-01", "2026-09-12", db_path=DB)
-    if isinstance(result, dict):
-        print("error:", result["error"])
-    else:
-        print(f"{len(result)} rows for {TEST_CODES[0]}")
-        print("  first:", result[0])
-        print("  last: ", result[-1])
+        if not rows:
+            return {"error": f"no schemes matching {name_query!r}"}
+        return rows
 
-    print("\n--- compare_funds ---")
-    result2 = compare_funds(TEST_CODES, db_path=DB)
-    if isinstance(result2, dict):
-        print("error:", result2["error"])
-    else:
-        for code, name, house, nav, nav_date in result2:
-            print(f"  [{code}] {name[:50]:<50}  NAV={nav}  ({nav_date})  [{house}]")
+    except sqlite3.Error as e:
+        return {"error": f"db error: {e}"}
+
+
+
