@@ -147,7 +147,3 @@ def get_all_scheme_codes(db_path: str = DB_PATH, limit: int = None) -> list[str]
     rows = conn.execute(sql).fetchall()
     conn.close()
     return [r[0] for r in rows]
-
-
-if __name__ == "__main__":
-    main()
