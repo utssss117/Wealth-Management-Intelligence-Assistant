@@ -21,13 +21,21 @@ from rag.ask_concept import ask_concept_question
 DB_PATH = str(PROJECT_ROOT / "data" / "nav.db")
 GROQ_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")
 DISCLAIMER = "\n\n---\n*This is for educational purposes only and not investment advice.*"
-# Simple classifier prompt to route incoming questions
-CLASSIFIER_PROMPT = """Classify this mutual fund question into one category:
-- numeric: asking about NAV, fund prices, or comparing mutual funds
-- advice: asking for recommendations, buy/sell advice, or where to invest
-- conceptual: asking about mutual fund terms, definitions, SEBI/AMFI rules
+# Classifier prompt — three explicit categories
+CLASSIFIER_PROMPT = """Classify the user's mutual fund question into exactly one of three categories:
 
-Reply with only one word: numeric, advice, or conceptual."""
+- numeric: The user is asking about a specific NAV value, current price, or wants to compare funds by NAV/performance data.
+  Examples: "What is the NAV of HDFC Mid-Cap?", "Compare SBI and Axis Bluechip NAV"
+
+- conceptual: The user wants to understand what something means, learn about regulations, or grasp a general wealth management concept.
+  Examples: "What is an expense ratio?", "How does SEBI regulate mutual funds?", "What is the difference between growth and dividend plans?"
+
+- advice_seeking: The user is asking for a personal recommendation, opinion, or guidance on what they should invest in, which fund is better *for them*, or whether now is a good time to invest.
+  Examples: "Should I invest in equity or debt mutual funds?", "Which SIP is best for a 25 year old?", "Is now a good time to buy index funds?", "Which fund should I pick?"
+
+IMPORTANT: If the question asks "should I", "which is better for me", "what should I invest in", or similar personal guidance, classify it as advice_seeking — even if it mentions fund types or concepts.
+
+Reply with only one word: numeric, conceptual, or advice_seeking."""
 class ChatState(TypedDict):
     question: str
     route: Optional[str]
@@ -52,11 +60,12 @@ def classifier_node(state: ChatState) -> dict:
     choice = res.content.strip().lower()
     if "numeric" in choice:
         route = "numeric"
-    elif "advice" in choice:
-        route = "advice"
+    elif "advice_seeking" in choice or "advice" in choice:
+        # Match both "advice_seeking" (expected) and bare "advice" (LLM shorthand)
+        route = "advice_seeking"
     else:
         route = "conceptual"
-        
+
     return {"route": route}
 
 
@@ -92,11 +101,16 @@ def numeric_node(state: ChatState) -> dict:
     return {"answer": "\n".join(lines) + DISCLAIMER}
 
 
-def advice_node(state: ChatState) -> dict:
-    # Safe refusal for advice-seeking queries
+def advice_seeking_node(state: ChatState) -> dict:
+    # Explicit, informative refusal for advice-seeking queries — no LLM or RAG call
     msg = (
-        "I cannot provide personalized investment advice or recommendations. "
-        "Please consult a SEBI-registered financial advisor for personal investment decisions."
+        "I'm not able to provide personalized investment advice or recommend "
+        "whether you should invest in a specific fund or asset class \u2014 that "
+        "depends on your individual financial goals, risk tolerance, and "
+        "circumstances, which is best discussed with a qualified financial "
+        "advisor. I can explain how different fund types work, or answer "
+        "questions about NAV, fund comparison, and mutual fund concepts if "
+        "that's helpful."
     )
     return {"answer": msg + DISCLAIMER}
 
@@ -115,7 +129,7 @@ workflow = StateGraph(ChatState)
 
 workflow.add_node("classifier", classifier_node)
 workflow.add_node("numeric", numeric_node)
-workflow.add_node("advice", advice_node)
+workflow.add_node("advice_seeking", advice_seeking_node)
 workflow.add_node("conceptual", conceptual_node)
 
 workflow.set_entry_point("classifier")
@@ -125,13 +139,13 @@ workflow.add_conditional_edges(
     pick_route,
     {
         "numeric": "numeric",
-        "advice": "advice",
+        "advice_seeking": "advice_seeking",
         "conceptual": "conceptual",
     }
 )
 
 workflow.add_edge("numeric", END)
-workflow.add_edge("advice", END)
+workflow.add_edge("advice_seeking", END)
 workflow.add_edge("conceptual", END)
 
 chatbot_app = workflow.compile()
@@ -145,22 +159,27 @@ def ask_chatbot(question: str) -> str:
 
 if __name__ == "__main__":
     test_questions = [
-        # Numeric: single match
+        # Q1 — Numeric: single match
         "What is the current NAV of 360 ONE Balanced Hybrid Fund Direct Plan GROWTH Option?",
-        # Numeric: multiple matches
+        # Q2 — Numeric: multiple matches
         "What is the NAV of Axis Children?",
-        # Conceptual: covered in knowledge base
+        # Q3 — Conceptual: covered in knowledge base
         "What is the role of SEBI in mutual funds?",
-        # Conceptual: not covered in knowledge base
+        # Q4 — Conceptual: not in knowledge base (should say "I don't have info")
         "How do I file my income tax return in India?",
-        # Advice seeking: should be politely declined
+        # Q5 — Old advice test (kept from previous run)
         "Should I invest in equity or debt mutual funds right now?",
+        # Q6 — NEW: advice_seeking — equity vs debt recommendation
+        "Should I invest in equity or debt mutual funds right now?",
+        # Q7 — NEW: advice_seeking — SIP recommendation
+        "Which SIP is best for a 25 year old?",
     ]
 
     for i, q in enumerate(test_questions, 1):
         print(f"\nQ{i}: {q}")
         print("-" * 60)
         try:
-            print(ask_chatbot(q))
+            answer = ask_chatbot(q)
+            print(answer)
         except Exception as err:
             print(f"Error: {err}")
