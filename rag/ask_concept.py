@@ -7,7 +7,7 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 FAISS_INDEX_PATH = str(PROJECT_ROOT / "faiss_index")

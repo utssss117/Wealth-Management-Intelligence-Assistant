@@ -38,14 +38,28 @@ def get_nav_trend(
 
 
 def compare_funds(
-    scheme_codes: list,
+    scheme_codes: list | str,
     db_path: str = "data/nav.db",
 ) -> list | dict:
     """Latest NAV + fund house name for each scheme code.
 
     Returns list of (scheme_code, scheme_name, fund_house_name, nav, nav_date),
     or {"error": "..."} if nothing matched.
+
+    scheme_codes may be a list of code strings OR a comma-separated string —
+    both are handled. If a string arrives, it is coerced to a list and a
+    warning is printed so callers can see the type mismatch in their logs.
     """
+    # ── Defensive coercion: agent @tool passes a comma-separated string ──────
+    if isinstance(scheme_codes, str):
+        print(
+            f"[compare_funds WARNING] received a string {scheme_codes!r} "
+            f"instead of a list — coercing by splitting on commas. "
+            f"Fix the caller to pass a list for cleanliness."
+        )
+        scheme_codes = [c.strip() for c in scheme_codes.split(",") if c.strip()]
+    # ─────────────────────────────────────────────────────────────────────────
+
     if not scheme_codes:
         return {"error": "scheme_codes is empty"}
 
