@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from router.graph import ask_chatbot
+from agent.agent import ask_agent
 
 app = FastAPI(
     title="Wealth Management Intelligence Assistant",
@@ -45,18 +45,19 @@ def health() -> HealthResponse:
 @app.post("/chat", response_model=ChatResponse, tags=["Chatbot"])
 def chat(request: ChatRequest) -> ChatResponse:
     """
-    Send any mutual fund question here and the LangGraph router will
-    figure out what to do with it:
+    Send any mutual fund question here and the ReAct agent will
+    autonomously decide which tools to call:
 
-    - NAV / price questions    → hits the SQLite database directly
-    - Concept / regulation Qs  → answered via the RAG pipeline
+    - NAV / price questions    → agent calls find_scheme_by_name + compare_funds
+    - Concept / regulation Qs  → agent calls ask_concept_question (RAG)
+    - Trend questions          → agent calls get_nav_trend
     - "Should I invest in X?"  → politely declined (no personalised advice)
 
     The answer already includes the educational disclaimer, so you can
     display it as-is in the frontend.
     """
     try:
-        answer = ask_chatbot(request.question)
+        answer = ask_agent(request.question, verbose=False)
         return ChatResponse(answer=answer)
     except Exception as exc:
         # Print the real traceback to the server logs so we can debug it,
