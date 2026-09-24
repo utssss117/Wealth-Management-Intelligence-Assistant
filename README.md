@@ -8,6 +8,10 @@
 
 This project aims to build a **Wealth Management Intelligence Assistant** that ingests, cleans, and analyzes daily Net Asset Value (NAV) data published by the **Association of Mutual Funds in India (AMFI)**. The long-term vision is to layer AI/LLM-based intelligence on top of structured fund data to provide actionable portfolio recommendations and fund comparisons.
 
+## 🧠 Agent Architecture
+
+![Agent tool flow](docs/agent_flow_diagram.svg)
+
 ---
 
 ## ✅ Work Done So Far
@@ -147,11 +151,31 @@ Wealth Management Intelligence Assistant/
 ### 1. Set up the environment
 
 ```bash
-# Recommended: use the langchain_env kernel or create a fresh venv
-pip install requests pandas jupyter
+pip install requests pandas jupyter fastapi uvicorn streamlit python-dotenv langchain langchain-core langchain-groq faiss-cpu sentence-transformers
 ```
 
-### 2. Fetch fresh NAV data
+> Make sure your `.env` file contains the required keys, especially `GROQ_API_KEY`.
+
+### 2. Start the backend
+
+```bash
+python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+This starts the FastAPI backend at:
+- `http://localhost:8000/health`
+- `http://localhost:8000/chat`
+
+### 3. Start the frontend
+
+```bash
+python -m streamlit run ui/app.py --server.port 8501 --server.address localhost
+```
+
+Open the app here:
+- `http://localhost:8501`
+
+### 4. Fetch fresh NAV data
 
 ```bash
 python scraper.py
@@ -159,9 +183,22 @@ python scraper.py
 
 This saves a new `data/raw/nav_raw_<today>.txt` file.
 
-### 3. Clean and export
+### 5. Clean and export
 
 Open and run all cells in `clean_nav_data.ipynb`. The notebook auto-detects the latest raw file and exports a clean CSV to `data/clean/`.
+
+---
+
+## 🧩 Current app flow
+
+The project now runs as a full stack:
+
+- **Frontend:** Streamlit UI for chat interactions
+- **Backend:** FastAPI server that calls the LangGraph agent
+- **Agent:** ReAct-style mutual fund assistant with tool use for fund lookup, comparison, trends, and concept questions
+- **Data layer:** AMFI NAV raw data, cleaned CSVs, and local RAG/document retrieval
+
+This gives a working end-to-end experience from scraping and cleaning fund data to asking the assistant questions in the browser.
 
 ---
 
