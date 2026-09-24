@@ -1,0 +1,107 @@
+<svg width="1400" height="620" viewBox="0 0 1400 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="620" fill="#EEF1EE"/>
+
+  <defs>
+    <style>
+      .title { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #2f3a45; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #2f3a45; }
+      .small { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #35414d; }
+      .tiny { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #3a4855; }
+      .box-text { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #2f3a45; }
+      .muted { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #485866; }
+      .line { stroke: #293542; stroke-width: 2.5; stroke-linecap: round; }
+      .arrow { stroke: #293542; stroke-width: 2.5; fill: none; }
+      .dotted { stroke: #374b59; stroke-width: 2; stroke-dasharray: 6 8; fill: none; }
+      .user { fill: #f1e8f5; stroke: #d38ac3; stroke-width: 3; }
+      .agent { fill: #dff7f6; stroke: #49bfb7; stroke-width: 3; }
+      .sql { fill: #f9e7d9; stroke: #f39b3d; stroke-width: 3; }
+      .rag { fill: #dfeef8; stroke: #4aa9d7; stroke-width: 3; }
+      .callout { fill: #f3f0d9; stroke: #e5d985; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <g>
+    <circle cx="120" cy="120" r="38" class="user"/>
+    <path d="M95 110C95 94 108 82 126 82C144 82 157 94 157 110V115C157 128 145 140 126 140C107 140 95 128 95 115V110Z" fill="#E8D2EE"/>
+    <circle cx="126" cy="98" r="16" fill="#E8D2EE"/>
+    <path d="M98 138C103 128 116 122 126 122C136 122 149 128 154 138V146H98V138Z" fill="#E8D2EE"/>
+    <text x="120" y="210" text-anchor="middle" class="label">User</text>
+
+    <line x1="120" y1="220" x2="120" y2="270" class="line"/>
+    <line x1="120" y1="270" x2="1070" y2="270" class="line"/>
+
+    <text x="125" y="255" class="small">“Compare HDFC Top 100 and SBI Bluechip, and explain expense ratio”</text>
+
+    <circle cx="119" cy="270" r="12" fill="#2C3D4F"/>
+    <text x="119" y="275" text-anchor="middle" fill="white" font-size="12" font-weight="700">1</text>
+
+    <rect x="570" y="75" width="260" height="90" rx="10" class="agent"/>
+    <text x="700" y="118" text-anchor="middle" class="box-text">Agent</text>
+    <text x="700" y="142" text-anchor="middle" class="muted">(LLM / LangGraph)</text>
+
+    <rect x="1040" y="75" width="260" height="90" rx="10" class="sql"/>
+    <text x="1170" y="118" text-anchor="middle" class="box-text">SQL Tools</text>
+    <text x="1170" y="142" text-anchor="middle" class="muted">(find_scheme, compare_funds)</text>
+
+    <rect x="1040" y="365" width="260" height="90" rx="10" class="rag"/>
+    <text x="1170" y="408" text-anchor="middle" class="box-text">RAG Tool</text>
+    <text x="1170" y="432" text-anchor="middle" class="muted">(FAISS + Groq)</text>
+
+    <rect x="545" y="260" width="290" height="55" rx="8" class="callout"/>
+    <text x="690" y="295" text-anchor="middle" class="small">reasoning cycle: agent decides which tool to call next</text>
+
+    <circle cx="198" cy="410" r="12" fill="#2C3D4F"/>
+    <text x="198" y="415" text-anchor="middle" fill="white" font-size="12" font-weight="700">2</text>
+    <path d="M120 300L120 340H570L570 400" class="arrow"/>
+    <path d="M570 400H1200" class="arrow"/>
+    <text x="570" y="340" class="small">find_scheme_by_name("HDFC Top 100")</text>
+    <path d="M708 385L708 430" class="dotted"/>
+    <path d="M708 430H1120" class="dotted"/>
+    <text x="760" y="420" class="small">returns scheme code 118989</text>
+
+    <circle cx="198" cy="470" r="12" fill="#2C3D4F"/>
+    <text x="198" y="475" text-anchor="middle" fill="white" font-size="12" font-weight="700">4</text>
+    <text x="570" y="448" class="small">find_scheme_by_name("SBI Bluechip")</text>
+    <path d="M570 470H1170" class="arrow"/>
+    <text x="760" y="490" class="small">returns scheme code 119598</text>
+
+    <circle cx="198" cy="530" r="12" fill="#2C3D4F"/>
+    <text x="198" y="535" text-anchor="middle" fill="white" font-size="12" font-weight="700">6</text>
+    <text x="570" y="510" class="small">compare_funds([118989, 119598])</text>
+    <path d="M570 530H1170" class="arrow"/>
+    <text x="760" y="550" class="small">returns NAV data for both funds</text>
+
+    <circle cx="198" cy="580" r="12" fill="#2C3D4F"/>
+    <text x="198" y="585" text-anchor="middle" fill="white" font-size="12" font-weight="700">8</text>
+    <text x="570" y="560" class="small">ask_concept_question("expense ratio")</text>
+    <path d="M570 580H1170" class="arrow"/>
+    <text x="760" y="600" class="small">returns grounded explanation from retrieved docs</text>
+
+    <path d="M120 300L120 520" class="line"/>
+    <path d="M120 520L980 520" class="line"/>
+    <path d="M980 520L980 300" class="line"/>
+    <path d="M980 300L700 300" class="line"/>
+
+    <text x="125" y="455" class="small">returns combined answer</text>
+
+    <rect x="570" y="520" width="260" height="90" rx="10" class="agent"/>
+    <text x="700" y="563" text-anchor="middle" class="box-text">Agent</text>
+    <text x="700" y="587" text-anchor="middle" class="muted">(LLM / LangGraph)</text>
+
+    <rect x="1040" y="520" width="260" height="90" rx="10" class="sql"/>
+    <text x="1170" y="563" text-anchor="middle" class="box-text">SQL Tools</text>
+    <text x="1170" y="587" text-anchor="middle" class="muted">(find_scheme, compare_funds)</text>
+
+    <rect x="1040" y="206" width="260" height="90" rx="10" class="rag"/>
+    <text x="1170" y="249" text-anchor="middle" class="box-text">RAG Tool</text>
+    <text x="1170" y="273" text-anchor="middle" class="muted">(FAISS + Groq)</text>
+
+    <g>
+      <circle cx="120" cy="520" r="38" class="user"/>
+      <path d="M95 510C95 494 108 482 126 482C144 482 157 494 157 510V515C157 528 145 540 126 540C107 540 95 528 95 515V510Z" fill="#E8D2EE"/>
+      <circle cx="126" cy="498" r="16" fill="#E8D2EE"/>
+      <path d="M98 548C103 538 116 532 126 532C136 532 149 538 154 548V556H98V548Z" fill="#E8D2EE"/>
+      <text x="120" y="610" text-anchor="middle" class="label">User</text>
+    </g>
+  </g>
+</svg>

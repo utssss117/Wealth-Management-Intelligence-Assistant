@@ -1,12 +1,3 @@
-# agent/agent.py
-# ReAct (Reason + Act) agent built with LangGraph primitives.
-#
-# Architecture mirrors what create_react_agent does internally:
-#   START --> call_model --> (has tool calls?) --> call_tools --> call_model --> ...
-#                                               --> END
-#
-# This approach works with langgraph 1.x without requiring langgraph-prebuilt.
-
 import os
 import sys
 import json
@@ -23,13 +14,7 @@ if hasattr(sys.stdout, "reconfigure"):
 load_dotenv(PROJECT_ROOT / ".env")
 
 from langchain_groq import ChatGroq
-from langchain_core.messages import (
-    BaseMessage,
-    HumanMessage,
-    SystemMessage,
-    ToolMessage,
-    AIMessage,
-)
+from langchain_core.messages import (BaseMessage, HumanMessage,SystemMessage,ToolMessage,AIMessage,)
 from langchain_core.tools import BaseTool
 from langgraph.graph import StateGraph, END, START
 from langgraph.graph.message import add_messages
@@ -41,9 +26,6 @@ from agent.tools import (
     ask_concept_question,
 )
 
-# ---------------------------------------------------------------------------
-# Config
-# ---------------------------------------------------------------------------
 GROQ_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3.8-27b")
 
 SYSTEM_PROMPT = """\
@@ -62,24 +44,17 @@ TOOLS: list[BaseTool] = [
     ask_concept_question,
 ]
 
-# Build a lookup dict for the tool-execution node
 TOOL_MAP: dict[str, BaseTool] = {t.name: t for t in TOOLS}
 
 
-# ---------------------------------------------------------------------------
-# Graph state
-# ---------------------------------------------------------------------------
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
 
 
-# ---------------------------------------------------------------------------
-# Graph nodes
-# ---------------------------------------------------------------------------
 def call_model(state: AgentState) -> dict:
-    """Call the LLM (with tools bound) on the current message history."""
+    """Call the LLM with tools bound on the current message history."""
     api_key = os.environ["GROQ_API_KEY"]
-    llm = ChatGroq(model=GROQ_MODEL, temperature=0, api_key=api_key)
+    llm = ChatGroq(model=GROQ_MODEL, temperature=0, api_key=api_key, max_tokens=900)
     llm_with_tools = llm.bind_tools(TOOLS)
     response = llm_with_tools.invoke(list(state["messages"]))
     return {"messages": [response]}
@@ -116,16 +91,13 @@ def call_tools(state: AgentState) -> dict:
 
 
 def should_continue(state: AgentState) -> str:
-    """Route: if the model requested tool calls, run them; otherwise finish."""
+    """Route to tool execution if the model requested tool calls, otherwise finish."""
     last_msg = state["messages"][-1]
     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
         return "call_tools"
     return END
 
 
-# ---------------------------------------------------------------------------
-# Build graph
-# ---------------------------------------------------------------------------
 def build_agent():
     graph = StateGraph(AgentState)
 
@@ -144,29 +116,13 @@ def build_agent():
     return graph.compile()
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
 def ask_agent(question: str, verbose: bool = True) -> str:
-    """Run the ReAct agent on a question and return the final answer string.
-
-    If verbose=True, prints each step (tool calls + results) to stdout
-    so you can see exactly what the agent decided to do.
-    """
+    """Run the ReAct agent on a question and return the final answer string."""
     return ask_agent_with_trace(question, verbose=verbose)["answer"]
 
 
 def ask_agent_with_trace(question: str, verbose: bool = True) -> dict:
-    """Run the ReAct agent and return a dict with structured trace data.
-
-    Returns:
-        {
-          "answer":     str          — final LLM response,
-          "tool_calls": list[dict]   — ordered list of all tool calls made,
-                                       each dict has "name" and "args" keys,
-          "messages":   list         — raw message objects for deeper inspection,
-        }
-    """
+    """Run the ReAct agent and return a structured result with the answer, tool calls, and full message history."""
     agent = build_agent()
     result = agent.invoke({
         "messages": [
@@ -175,7 +131,6 @@ def ask_agent_with_trace(question: str, verbose: bool = True) -> dict:
         ]
     })
 
-    # Collect every tool call in order from the full message history
     tool_calls_ordered: list[dict] = []
     for msg in result["messages"]:
         if isinstance(msg, AIMessage) and msg.tool_calls:
@@ -187,13 +142,13 @@ def ask_agent_with_trace(question: str, verbose: bool = True) -> dict:
         print(f"QUESTION: {question}")
         print("=" * 70)
         if tool_calls_ordered:
-            print(f"\n[TOOL CALL TRACE — {len(tool_calls_ordered)} call(s) total]")
+            print(f"\n[TOOL CALLS — {len(tool_calls_ordered)} total]")
             for i, tc in enumerate(tool_calls_ordered, 1):
                 print(f"  {i}. {tc['name']}({tc['args']})")
         else:
             print("\n[NO TOOL CALLS — answered directly]")
 
-        print("\n[FULL MESSAGE TRACE]")
+        print("\n[MESSAGE TRACE]")
         for msg in result["messages"]:
             if isinstance(msg, AIMessage):
                 if msg.tool_calls:
@@ -213,26 +168,19 @@ def ask_agent_with_trace(question: str, verbose: bool = True) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# Test harness
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import time
 
     test_questions = [
-        # Q1 — NAV lookup: should call find_scheme_by_name then compare_funds
         "what is the nav of hdfc flexi cap fund",
-        # Q2 — Concept: should call ask_concept_question
         "what is expense ratio",
-        # Q3 — Multi-tool: compare two funds AND explain a concept in one shot
         "compare hdfc flexi cap fund and hdfc mid cap fund and explain what expense ratio means",
-        # Q4 — Advice-seeking: should decline via system prompt, no tool call
         "should i invest in equity funds",
     ]
 
     for i, q in enumerate(test_questions):
         if i > 0:
-            print(f"\n[Waiting 65s to respect Groq rate limit before next question...]")
+            print("\n[Waiting 65s to respect Groq rate limit...]")
             time.sleep(65)
         ask_agent(q, verbose=True)
         print()

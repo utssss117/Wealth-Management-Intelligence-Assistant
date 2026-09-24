@@ -1,8 +1,3 @@
-# Reads the latest clean NAV CSV and loads it into nav.db.
-# Run this once after a fresh data export; use backfill_historical.py for day-to-day updates.
-#
-# Usage: python db/load_to_db.py
-
 import sqlite3
 import os
 import glob
@@ -45,6 +40,7 @@ def insert_data(conn: sqlite3.Connection, df: pd.DataFrame) -> None:
         isin_g  = row["isin_growth"]
         isin_r  = row["isin_reinvest"]
         name    = row["scheme_name"]
+
         if house not in house_id_cache:
             cur.execute("INSERT OR IGNORE INTO fund_houses (fund_house_name) VALUES (?)", (house,))
             cur.execute("SELECT fund_house_id FROM fund_houses WHERE fund_house_name = ?", (house,))

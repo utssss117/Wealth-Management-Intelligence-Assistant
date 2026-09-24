@@ -76,7 +76,7 @@ if user_input:
                 resp = requests.post(
                     BACKEND_URL,
                     json={"question": user_input},
-                    timeout=60,
+                    timeout=120,
                 )
                 resp.raise_for_status()
                 answer = resp.json().get("answer", "No answer returned.")

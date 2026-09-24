@@ -1,8 +1,3 @@
-﻿# agent/tools.py
-# LangChain @tool wrappers around the four backend functions.
-# Docstrings are kept concise — Groq free tier has a 7k ITPM limit,
-# so the tool schemas must be small.
-
 import sys
 from pathlib import Path
 
@@ -33,7 +28,7 @@ def find_scheme_by_name(name_query: str) -> str:
         {"scheme_code": str(code), "scheme_name": name, "fund_house": house}
         for code, name, house in result
     ]
-    return json.dumps(rows[:10])  # cap at 10 results to keep tokens low
+    return json.dumps(rows[:10])
 
 
 @tool

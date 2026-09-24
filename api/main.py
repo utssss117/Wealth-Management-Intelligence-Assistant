@@ -1,10 +1,10 @@
 import sys
 from pathlib import Path
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -20,23 +20,27 @@ app = FastAPI(
     ),
     version="0.1.0",
 )
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # TODO: lock this down before deploying
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Request / response shapes — Pydantic validates the JSON body automatically
-# and gives FastAPI enough information to generate the OpenAPI docs.
-
 
 class ChatRequest(BaseModel):
-    question: str  
+    question: str
+
+
 class ChatResponse(BaseModel):
-    answer: str  
+    answer: str
+
+
 class HealthResponse(BaseModel):
-    status: str 
+    status: str
+
+
 @app.get("/health", response_model=HealthResponse, tags=["Meta"])
 def health() -> HealthResponse:
     return HealthResponse(status="ok")
@@ -45,23 +49,20 @@ def health() -> HealthResponse:
 @app.post("/chat", response_model=ChatResponse, tags=["Chatbot"])
 def chat(request: ChatRequest) -> ChatResponse:
     """
-    Send any mutual fund question here and the ReAct agent will
-    autonomously decide which tools to call:
+    Send any mutual fund question here and the ReAct agent will decide which
+    tools to call:
 
-    - NAV / price questions    → agent calls find_scheme_by_name + compare_funds
-    - Concept / regulation Qs  → agent calls ask_concept_question (RAG)
-    - Trend questions          → agent calls get_nav_trend
-    - "Should I invest in X?"  → politely declined (no personalised advice)
+    - NAV / price questions    → find_scheme_by_name + compare_funds
+    - Concept / regulation Qs  → ask_concept_question (RAG)
+    - Trend questions          → get_nav_trend
+    - "Should I invest in X?"  → politely declined
 
-    The answer already includes the educational disclaimer, so you can
-    display it as-is in the frontend.
+    The answer already includes the educational disclaimer.
     """
     try:
-        answer = ask_agent(request.question, verbose=False)
+        answer = ask_agent(request.question, verbose=True)
         return ChatResponse(answer=answer)
     except Exception as exc:
-        # Print the real traceback to the server logs so we can debug it,
-        # but only send a vague message to the client — no stack traces.
         print(f"[ERROR] /chat failed — question={request.question!r}  reason={exc}")
         raise HTTPException(
             status_code=500,

@@ -54,7 +54,7 @@ if __name__ == "__main__":
     questions = [
         "What is NAV in mutual funds?",
         "What is expense ratio and how does it affect my returns?",
-        "How do I file my income tax return in India?",  # should say "I don't have info"
+        "How do I file my income tax return in India?",
     ]
 
     for i, q in enumerate(questions, 1):
