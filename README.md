@@ -1,5 +1,7 @@
 # 💼 Wealth Management Intelligence Assistant
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://wealth-management-intelligence-assistant-2drxxjecxz6fxda3tnscs.streamlit.app/)
+
 > An end-to-end data pipeline and AI-powered assistant for Indian mutual fund analysis — starting from raw AMFI NAV data and building toward intelligent portfolio insights.
 
 ---
@@ -148,34 +150,31 @@ Wealth Management Intelligence Assistant/
 
 ## 🚀 How to Run
 
-### 1. Set up the environment
+### 🌐 Live Demo
+
+> **[👉 Try it on Streamlit Cloud](https://wealth-management-intelligence-assistant-2drxxjecxz6fxda3tnscs.streamlit.app/)**
+
+---
+
+### Run Locally
+
+#### 1. Set up the environment
 
 ```bash
-pip install requests pandas jupyter fastapi uvicorn streamlit python-dotenv langchain langchain-core langchain-groq faiss-cpu sentence-transformers
+pip install -r requirements.txt
 ```
 
-> Make sure your `.env` file contains the required keys, especially `GROQ_API_KEY`.
+> Make sure your `.env` file contains `GROQ_API_KEY=your-key-here`.
 
-### 2. Start the backend
+#### 2. Start the Streamlit app
 
 ```bash
-python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
+python -m streamlit run ui/app.py
 ```
 
-This starts the FastAPI backend at:
-- `http://localhost:8000/health`
-- `http://localhost:8000/chat`
+Open the app at `http://localhost:8501`
 
-### 3. Start the frontend
-
-```bash
-python -m streamlit run ui/app.py --server.port 8501 --server.address localhost
-```
-
-Open the app here:
-- `http://localhost:8501`
-
-### 4. Fetch fresh NAV data
+#### 3. Fetch fresh NAV data
 
 ```bash
 python scraper.py
@@ -183,7 +182,7 @@ python scraper.py
 
 This saves a new `data/raw/nav_raw_<today>.txt` file.
 
-### 5. Clean and export
+#### 4. Clean and export
 
 Open and run all cells in `clean_nav_data.ipynb`. The notebook auto-detects the latest raw file and exports a clean CSV to `data/clean/`.
 
@@ -191,14 +190,14 @@ Open and run all cells in `clean_nav_data.ipynb`. The notebook auto-detects the 
 
 ## 🧩 Current app flow
 
-The project now runs as a full stack:
+The project runs as a **single Streamlit app** (deployed on Streamlit Cloud):
 
 - **Frontend:** Streamlit UI for chat interactions
-- **Backend:** FastAPI server that calls the LangGraph agent
-- **Agent:** ReAct-style mutual fund assistant with tool use for fund lookup, comparison, trends, and concept questions
-- **Data layer:** AMFI NAV raw data, cleaned CSVs, and local RAG/document retrieval
+- **Agent:** ReAct-style LangGraph mutual fund assistant with tool use for fund lookup, comparison, trends, and concept questions
+- **RAG layer:** FAISS vector index over financial concept docs (expense ratio, SIP, ELSS, SEBI, etc.)
+- **Data layer:** SQLite DB (`data/nav.db`) with AMFI NAV history
 
-This gives a working end-to-end experience from scraping and cleaning fund data to asking the assistant questions in the browser.
+This gives a working end-to-end experience from scraping and cleaning fund data to asking the assistant questions in the browser — deployed live on Streamlit Cloud.
 
 ---
 
@@ -222,4 +221,4 @@ This data is updated daily on business days and is freely available in the publi
 
 ---
 
-*Last updated: August 2026*
+*Last updated: September 2026*
