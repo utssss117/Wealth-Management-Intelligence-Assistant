@@ -1,13 +1,29 @@
-import streamlit as st
-import requests
+import os
+import sys
+from pathlib import Path
 
+# ── Ensure project root is on the path ──────────────────────────────────────
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+import streamlit as st
+
+# ── Secrets: Streamlit Cloud uses st.secrets; local dev falls back to .env ──
+if "GROQ_API_KEY" in st.secrets:
+    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+else:
+    from dotenv import load_dotenv
+    load_dotenv(PROJECT_ROOT / ".env")
+
+from agent.agent import ask_agent  # noqa: E402  (must come after env is set)
+
+# ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Wealth Management Intelligence Assistant",
     page_icon="💹",
     layout="centered",
 )
-
-BACKEND_URL = "http://localhost:8000/chat"
 
 EXAMPLE_QUESTIONS = [
     "What is the NAV of HDFC Flexi Cap Fund?",
@@ -17,11 +33,13 @@ EXAMPLE_QUESTIONS = [
     "How does SEBI regulate mutual funds in India?",
 ]
 
+# ── Session state ─────────────────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "prefill" not in st.session_state:
     st.session_state.prefill = ""
 
+# ── Header ────────────────────────────────────────────────────────────────────
 st.title("💹 Wealth Management Intelligence Assistant")
 
 st.info(
@@ -33,6 +51,7 @@ st.info(
 )
 st.divider()
 
+# ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("💹 What can I help with?")
     st.markdown(
@@ -48,15 +67,16 @@ with st.sidebar:
             st.session_state.prefill = q
             st.rerun()
     st.divider()
-    st.caption("Backend: http://localhost:8000")
     if st.button("🗑️ Clear chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
+# ── Chat history ──────────────────────────────────────────────────────────────
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+# ── Input handling ────────────────────────────────────────────────────────────
 prefill_value = st.session_state.prefill
 st.session_state.prefill = ""
 
@@ -73,25 +93,15 @@ if user_input:
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             try:
-                resp = requests.post(
-                    BACKEND_URL,
-                    json={"question": user_input},
-                    timeout=120,
-                )
-                resp.raise_for_status()
-                answer = resp.json().get("answer", "No answer returned.")
-            except requests.exceptions.ConnectionError:
+                answer = ask_agent(user_input, verbose=False)
+            except EnvironmentError as e:
                 answer = (
-                    "❌ **Could not reach the backend.**\n\n"
-                    "Make sure the FastAPI server is running first:\n\n"
-                    "    python -m uvicorn api.main:app --reload --port 8000"
+                    f"❌ **Configuration error:** {e}\n\n"
+                    "Make sure `GROQ_API_KEY` is set in your Streamlit secrets."
                 )
-            except requests.exceptions.Timeout:
-                answer = "⏱️ **Request timed out.** Try again in a moment."
-            except requests.exceptions.HTTPError as e:
-                answer = f"⚠️ **Backend error ({e.response.status_code}).** Please try again."
             except Exception as e:
                 answer = f"⚠️ **Unexpected error:** {e}"
         st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
+

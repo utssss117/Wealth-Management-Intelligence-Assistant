@@ -45,6 +45,7 @@ Thumbs.db
 # Secrets / API Keys
 secrets.json
 config/secrets.yaml
+.streamlit/secrets.toml
 
 # Reports / Generated Files
 reports/figures/*.png
@@ -69,4 +70,4 @@ inspect_cells.py
 
 # Data files (large / generated)
 data/raw/*.txt
-data/*.db
+# data/*.db  <-- kept: nav.db (2.4 MB) is needed by the app on Streamlit Cloud

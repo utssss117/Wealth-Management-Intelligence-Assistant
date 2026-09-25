@@ -1,11 +1,15 @@
 import sqlite3
+from pathlib import Path
+
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_DEFAULT_DB = str(_PROJECT_ROOT / "data" / "nav.db")
 
 
 def get_nav_trend(
     scheme_code: str,
     start_date: str,
     end_date: str,
-    db_path: str = "data/nav.db",
+    db_path: str = None,
 ) -> list | dict:
     """NAV history for one scheme between two dates, oldest-first.
 
@@ -18,6 +22,8 @@ def get_nav_trend(
           AND  nav_date BETWEEN ? AND ?
         ORDER  BY nav_date ASC
     """
+    if db_path is None:
+        db_path = _DEFAULT_DB
     try:
         conn = sqlite3.connect(db_path)
         try:
@@ -35,7 +41,7 @@ def get_nav_trend(
 
 def compare_funds(
     scheme_codes: list | str,
-    db_path: str = "data/nav.db",
+    db_path: str = None,
 ) -> list | dict:
     """Latest NAV and fund house name for each scheme code.
 
@@ -72,6 +78,8 @@ def compare_funds(
         ORDER  BY s.scheme_code
     """
 
+    if db_path is None:
+        db_path = _DEFAULT_DB
     try:
         conn = sqlite3.connect(db_path)
         try:
@@ -89,7 +97,7 @@ def compare_funds(
 
 def find_scheme_by_name(
     name_query: str,
-    db_path: str = "data/nav.db",
+    db_path: str = None,
 ) -> list | dict:
     """Case-insensitive partial match on scheme_name.
 
@@ -103,6 +111,8 @@ def find_scheme_by_name(
         WHERE  LOWER(s.scheme_name) LIKE LOWER(?)
         ORDER  BY s.scheme_name
     """
+    if db_path is None:
+        db_path = _DEFAULT_DB
     try:
         conn = sqlite3.connect(db_path)
         try:
